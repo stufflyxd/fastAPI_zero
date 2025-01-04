@@ -1,0 +1,48 @@
+[tool.poetry]
+name = "fastz"
+version = "0.1.0"
+description = "Projeto FastAPI 'to do list'"
+authors = ["Stuffxd <pedox@hotmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies] # Depencias abstratas do projeto (os nomes das dependencias e as versões)
+python = "3.12.*"   # .* quer dizer qualquer versão da 3.11
+fastapi = {extras = ["standard"], version = "^0.115.6"}
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.8.4"
+pytest = "^8.3.4"
+pytest-cov = "^6.0.0"
+taskipy = "^1.14.1"
+
+[tool.pytest.ini_options]
+pythonpath = "."    # Isso diz que roda na raiz do projeto, onde o pyproject.toml foi definido
+addopts = '-p no:warnings'
+
+
+[tool.ruff]   # É um linter (analizador de código estático). Aqui ficaram os padrões para serem analisados
+line-length = 79  # A conta começa no zero, então isso irá até 80.
+extend-exclude = ['migrations']   # Exclui migrations. (Migrations gera código automático)
+
+[tool.ruff.lint]  # Isso é uma nova tabela do ruff
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'
+
+[tool.taskipy.tasks]
+run = 'fastapi dev .\fastz\app.py'
+
+pre_test = 'task lint'                              # Antes do teste, roda isso.
+test = 'pytest --cov=fastz -vv'                     # Ao rodar isso, ele entende que tem que executar primeiro o "pre_test"
+post_test = 'coverage html'                         # Depois do teste, roda isso.
+
+lint = 'ruff check . && ruff check . --diff '       #
+format = 'ruff check . --fix && ruff format . '     # Corrige os erros E depois formata
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

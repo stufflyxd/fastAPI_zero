@@ -18,4 +18,14 @@ def test_read_root_deve_retornar_OK_e_yasmin():
     assert response.status_code == HTTPStatus.OK
 
     # A chamada do servidor é retornado em um json
-    assert response.json() == {'message': 'Yasmin minha gostosa.'}
+    assert response.json() == {'mensage': 'Yasmin é minha gostosa.'}
+
+
+# Exercicio
+def test_saudacao_deve_retornar_OK_e_ola_mundo():
+    client = TestClient(app)
+    response = client.get('/ola_mundo')
+
+    assert response.status_code == HTTPStatus.OK
+
+    assert "Olá, mundo!" in response.text
